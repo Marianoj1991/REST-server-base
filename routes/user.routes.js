@@ -9,8 +9,9 @@ const {
   usersDelete,
 } = require("../controllers/users.controller");
 
-// Importamos el middleware
-const { validarCampos } = require("../middlewares/validar-campos");
+// IMPORTAMOS MIDDLEWARES
+const { esAdminRole, tieneRole, validarCampos, validarJWT } = require('../middlewares');
+
 const { esRolValido, existeMailFunc, existeUsuarioPorID } = require("../helpers/db-validators");
 
 const router = Router();
@@ -29,12 +30,16 @@ router.post("/", [
 
 router.put("/:id", [
   check('id', 'Lo siento, el ID ingresado no es un mongo ID').isMongoId(),
+  check('contraseña', 'La contraseña es obligatoria y debe tener más de 6 caracteres').isLength({ min: 6 }),
   check( 'id' ).custom( existeUsuarioPorID ),
   check('rol').custom( esRolValido ),
   validarCampos
 ] ,usersPut);
 
 router.delete("/:id", [
+  validarJWT,
+  // esAdminRole,
+  tieneRole('ADMIN_ROLE', 'VENTAS_ROLE'), 
   check('id', 'Lo siento, el ID ingresado no es un mongo ID').isMongoId(),
   check( 'id' ).custom( existeUsuarioPorID ),
   validarCampos

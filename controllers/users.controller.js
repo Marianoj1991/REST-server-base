@@ -71,16 +71,13 @@ const usersDelete = async ( req, res = response ) => {
 
   const { id } = req.params;
 
-  // LO BORRAMOS FISICAMENTE, NO ES RECOMENDADO
-  // ++++ const usuario = await Usuario.findByIdAndDelete( id ); ++++
-
   // ESTA ES LA FORMA RECOMENDADA.
-  const usuario = await Usuario.findByIdAndUpdate( id, { estado: false } )
+  const usuarioBorrado = await Usuario.findByIdAndUpdate( id, { estado: false } );
 
   res.json({
     msg: 'delete API - controller',
     id,
-    usuario
+    usuarioBorrado,
   })
 };
 
