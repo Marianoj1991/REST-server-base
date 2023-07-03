@@ -42,8 +42,6 @@
         // Google Token: ID_TOKEN
         const body = { id_token: response.credential };
 
-        console.log('id_token', body);
-
         fetch('https://rest-server-crud.onrender.com/api/auth/google', {
           method: 'POST',
           headers: {
@@ -60,6 +58,11 @@
       
 
       const button = document.getElementById('signout');
+
+      if( localStorage.getItem('mail') ) {
+        button.classList.add('display: none');
+        alert( `User mail ${ resp.usuario.correo }` )
+      }
 
       button.onclick = () => {
         console.log(google.accounts.id);
