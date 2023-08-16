@@ -1,7 +1,7 @@
 const { request, response } = require("express");
 const bcryptjs = require("bcryptjs");
 
-const UserModel = require("../model/usuario");
+const { Usuario } = require("../model");
 
 
 const { generarJTW } = require("../helpers/generar-jwt");
@@ -11,17 +11,18 @@ const login = async (req = request, res = response) => {
   const { correo, contraseña } = req.body;
 
   try {
-    const usuario = await UserModel.findOne({ correo });
+    const usuario = await Usuario.findOne({ correo });
+    
     //VERIFICAR SI EL CORREO EXISTE
     if (!usuario) {
-      return res.status(400).json({
+      return res.status(401).json({
         msg: "Usuario | Password no son correctos - Correo",
       });
     }
 
     //VERIFICAR SI EL USUARIO ESTA ACTIVO
     if (!usuario.estado) {
-      return res.status(400).json({
+      return res.status(401).json({
         msg: "Usuario | Password no son correctos - Estado: false",
       });
     }
@@ -29,7 +30,7 @@ const login = async (req = request, res = response) => {
     //VERIFICAR LA CONTRASEÑA
     const validPassword = bcryptjs.compareSync(contraseña, usuario.contraseña);
     if (!validPassword) {
-      return res.status(400).json({
+      return res.status(401).json({
         msg: "Usuario | Password no son correctos - Contraseña",
       });
     }
@@ -56,7 +57,7 @@ const googleSignIn = async (req = request, res = response) => {
   try {
     const { correo, nombre, img } = await googleVerify(id_token);
 
-    let usuario = await UserModel.findOne({correo});
+    let usuario = await Usuario.findOne({correo});
     
     if( !usuario ){ 
       const data = {
@@ -68,7 +69,7 @@ const googleSignIn = async (req = request, res = response) => {
         rol: 'USER_ROLE'
       }
 
-      usuario = new UserModel( data );
+      usuario = new Usuario( data );
       await usuario.save();
     }
 
@@ -79,13 +80,14 @@ const googleSignIn = async (req = request, res = response) => {
     }
 
     // GENERAR EL JWT
-    const token = await generarJTW( usuario.id );
+    const token = await generarJTW( usuario.id );   
 
     res.json({
       usuario,
-      token
+      token,
+      id_token
     });
-    
+
   } catch (err) {
     console.log(err);
     json.status(401).json({

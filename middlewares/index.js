@@ -1,5 +1,5 @@
 
-const validaCampos  = require('./validar-campos');  
+const validaCampos = require('./validar-campos');  
 const validarJWT = require('./validar-jwt');  
 const validaRoles = require('./validar-roles');
 

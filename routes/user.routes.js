@@ -38,8 +38,8 @@ router.put("/:id", [
 
 router.delete("/:id", [
   validarJWT,
-  // esAdminRole,
-  tieneRole('ADMIN_ROLE', 'VENTAS_ROLE'), 
+  esAdminRole,
+  // tieneRole('ADMIN_ROLE', 'VENTAS_ROLE'), 
   check('id', 'Lo siento, el ID ingresado no es un mongo ID').isMongoId(),
   check( 'id' ).custom( existeUsuarioPorID ),
   validarCampos

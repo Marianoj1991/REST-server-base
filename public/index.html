@@ -9,71 +9,86 @@
       h1 {
         text-align: center;
       }
+      .button-google {
+        display: none;
+      }
 
-       
+      #signout {
+        margin-top: 10px;
+      }
     </style>
   </head>
   <body>
     <h1>Google Sign-in</h1>
     <hr />
 
-    <div
-      id="g_id_onload"
-      data-client_id="514129518939-qv6nfl0l0eqtc71fnart75neiodgiu22.apps.googleusercontent.com"
-      data-auto_prompt="false"
-      data-callback="handleCredentialResponse"
-    ></div>
-    <div
-      class="g_id_signin"
-      data-type="standard"
-      data-size="large"
-      data-theme="outline"
-      data-text="sign_in_with"
-      data-shape="rectangular"
-      data-logo_alignment="left"
-    ></div>
+    <div id="button-google">
+
+      <div
+        id="g_id_onload"
+        data-client_id="514129518939-qv6nfl0l0eqtc71fnart75neiodgiu22.apps.googleusercontent.com"
+        data-auto_prompt="false"
+        data-callback="handleCredentialResponse"
+      ></div>
+      <div
+        class="g_id_signin"
+        data-type="standard"
+        data-size="large"
+        data-theme="outline"
+        data-text="sign_in_with"
+        data-shape="rectangular"
+        data-logo_alignment="left"
+      ></div>
+    </div>
 
     <button id="signout">Sign Out</button>
 
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script>
       function handleCredentialResponse(response) {
-
         // Google Token: ID_TOKEN
-        const body = { id_token: response.credential };
+        const body = { id_token: response.credential }
+        //   fetch('https://rest-server-crud.onrender.com/api/auth/google', {
+        //     method: 'POST',
+        //     headers: {
+        //       'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify(body)
+        //   })s
+        //     .then( resp => resp.json() )
+        //     .then( resp => {
+        //       localStorage.setItem('mail', resp.usuario.correo)
+        //     } )
+        //     .catch( console.warn )
+        // }
 
-        fetch('https://rest-server-crud.onrender.com/api/auth/google', {
-          method: 'POST',
+        fetch("http://localhost:8080/api/auth/google", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify(body)
-        })
-          .then( resp => resp.json() )
-          .then( resp => {
-            localStorage.setItem('mail', resp.usuario.correo)
-          } )
-          .catch( console.warn )
+          body: JSON.stringify(body),
+        }) // ESTO SE EJECUTA CUANDO VUELVE DEL CONTROLADOR
+          .then((resp) => resp.json())
+          .then((resp) => {
+            console.log({ resp })
+            localStorage.setItem("mail", resp.usuario.correo);
+          })
+          .catch(console.warn);
       }
-      
 
-      const button = document.getElementById('signout');
-
-      if( localStorage.getItem('mail') ) {
-        button.classList.add('display: none');
-        alert( `User mail ${ resp.usuario.correo }` )
-      }
+      const button = document.getElementById("signout");
+      const buttonGoogle = document.getElementById('button-google');
 
       button.onclick = () => {
         console.log(google.accounts.id);
-
         google.accounts.id.disableAutoSelect();
-        google.accounts.id.revoke( localStorage.getItem('mail'), done => {
+        google.accounts.id.revoke(localStorage.getItem("mail"), (done) => {
           localStorage.clear();
           location.reload();
+        });
+      };
 
-        } );
-      }
     </script>
   </body>
 </html>

@@ -3,7 +3,7 @@ const { request, response } = require("express");
 const esAdminRole = async ( req = request, res = response, next  ) => {
 
   if( !req.usuario ) {
-    return res.status( 500 ).json({
+    return res.status( 401 ).json({
       msg: 'Se quiere verificar el rol sin válidar el token primero'
     });
   };

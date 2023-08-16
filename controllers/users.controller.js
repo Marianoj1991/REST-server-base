@@ -1,7 +1,7 @@
 const { response, request } = require('express');
 
 // Modelo de Usuario importado
-const Usuario = require('../model/usuario');
+const { Usuario } = require('../model');
 
 const bcryptjs = require('bcryptjs');
 
