@@ -1,50 +1,44 @@
-const { request, response } = require('express');
-const jwt = require('jsonwebtoken');
+const { request, response } = require('express')
+const jwt = require('jsonwebtoken')
 
-const UsuarioModelo = require('../model/usuario');
+const UsuarioModelo = require('../model/usuario')
 
-const validarJWT = async ( req = request, res = response, next ) => {
-
-  const token = req.header( 'x-token' );
-  if(!token) {
+const validarJWT = async (req = request, res = response, next) => {
+  const token = req.header('x-token')
+  if (!token) {
     return res.status(401).json({
       msg: 'No hay token en la petición'
     })
   }
 
   try {
-    
-    const { uid } = jwt.verify( token, process.env.SECRETORPRIVATEKEY );
+    const { uid } = jwt.verify(token, process.env.SECRETORPRIVATEKEY)
     // leer el modelo que corresponde al uid
-    const usuario = await UsuarioModelo.findById(uid);
-    if(!usuario) {
+    const usuario = await UsuarioModelo.findById(uid)
+    if (!usuario) {
       return res.status(401).json({
-        msg:'Token no válido - Usuario no existe en DB'
+        msg: 'Token no válido - Usuario no existe en DB'
       })
     }
 
-    if( !usuario.estado ) {
+    if (!usuario.estado) {
       return res.status(401).json({
-        msg:'Token no válido - Usuario inactivo'
+        msg: 'Token no válido - Usuario inactivo'
       })
     }
 
-    // req.usuario = 
-    req.usuario = usuario;
-    console.log(usuario);
- 
-    next();
+    // req.usuario =
+    req.usuario = usuario
 
-  } catch( err ) {
-    console.log(err);
-    res.status( 401 ).json({
+    next()
+  } catch (err) {
+    console.log(err)
+    res.status(401).json({
       msg: 'Token no válido'
     })
   }
-
-
 }
 
 module.exports = {
-    validarJWT
+  validarJWT
 }

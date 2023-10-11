@@ -56,7 +56,7 @@ const estaDisponibleCatNombre = async ( reqNombre ) => {
  * Productos
  */
 const estaDisponibleNombreProd = async ( reqNombre = '' ) => {
-  const nombre = reqNombre.toLowerCase();
+  const nombre = reqNombre.toUpperCase();
   const producto = await Producto.findOne({nombre});
   if( producto ) {
     throw new Error(`Ya existe un producto registrado con el nombre ${nombre}`);

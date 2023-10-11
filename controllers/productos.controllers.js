@@ -44,7 +44,7 @@ const obtenerProductoPorId = async ( req = request, res = response ) => {
 
 const crearProducto = async ( req = request, res = response ) => {
 
-    const nombre = req.body.nombre.toLowerCase();
+    const nombre = req.body.nombre.toUpperCase();
     const { estado, usuario, ...body } = req.body;
     const data = {
         ...body,

@@ -40,7 +40,7 @@ const buscarCategorias = async ( termino = '', res = response ) => {
             .populate('usuario', 'nombre');
         return res.json({
             msg: 'Categoria encontrada',
-            results: (categoria) ? categoria : {}
+            results: (categoria) ? categoria : []
         })
     }
 
@@ -52,7 +52,7 @@ const buscarCategorias = async ( termino = '', res = response ) => {
 
     return res.json({
         msg: 'Categoria encontrada con éxito',
-        results: (categoria) ? categoria : {}
+        results: (categoria) ? categoria : []
     })
 
 }
@@ -77,7 +77,7 @@ const buscarProductos = async ( termino = '', res = response ) => {
     .populate( 'categoria', 'nombre' );
 
     return res.json({
-        results: (producto) ? producto : {}
+        results: (producto) ? producto : []
     })
 }
 
